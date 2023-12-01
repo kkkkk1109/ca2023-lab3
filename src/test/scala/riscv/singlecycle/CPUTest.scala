@@ -113,3 +113,18 @@ class ByteAccessTest extends AnyFlatSpec with ChiselScalatestTester {
     }
   }
 }
+
+class hw3 extends AnyFlatSpec with ChiselScalatestTester {
+  behavior.of("Single Cycle CPU")
+  it should "do bfloat16 multiplication "in {
+    test(new TestTopModule("hw3.asmbin")).withAnnotations(TestAnnotations.annos) { c =>
+      for (i <- 1 to 1000) {
+        c.clock.step()
+        c.io.mem_debug_read_address.poke((i * 4).U) // Avoid timeout
+      }
+      c.io.regs_debug_read_address.poke(19.U) // t0
+      c.io.regs_debug_read_data.expect(0x43000000.U)
+
+    }
+  }
+}
